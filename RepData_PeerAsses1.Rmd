@@ -12,8 +12,9 @@ old<-read.csv("activity.csv",header=T)
 Transform date fields for analysis. 
 
 ```{r}
-time<-sprintf("%04d",as.numeric(as.character(old$interval)))
-old$dttm<-strptime(paste(old$date,time),format="%Y-%m-%d %H%M")
+old$interval<-sprintf("%04d",old$interval)
+##old$interval<-strptime(old$interval,format="%H%M")
+old$dttm<-strptime(paste(old$date,old$interval),format="%Y-%m-%d %H%M")
 ```
 
 
@@ -21,15 +22,16 @@ old$dttm<-strptime(paste(old$date,time),format="%Y-%m-%d %H%M")
 
 Make a histogram of the total number of steps taken each day.
 
-```{r fig.width=7, fig.height=6}
+```{r stepHist fig.width=7, fig.height=6}
 oldSteps<-tapply(old$steps,old$date,sum)
-hist(oldSteps,main="Steps Per Day",ylab="Days",xlab="Steps")
+hist(oldSteps,main="Total Steps Per Day",
+     ylab="Number of Days",xlab="Number of Steps")
 ```
 
 Calculate the mean and median total number of steps taken per day.
 ```{r}
-oldMean<-mean(oldSteps,na.rm=T);oldMean
-oldMedian<-median(oldSteps,na.rm=T);oldMedian
+oldMean<-mean(oldSteps,na.rm=TRUE);oldMean
+oldMedian<-median(oldSteps,na.rm=TRUE);oldMedian
 ```
 
 
@@ -112,11 +114,8 @@ Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minut
 ```{r fig.width=7, fig.height=6}
 newAvgWe<-with(subset(new,end.fl=1),tapply(new$steps,new$interval,mean,na.rm=T))
 newAvgWd<-with(subset(new,end.fl=0),tapply(new$steps,new$interval,mean,na.rm=T))
-newt<-cbind(newAvgWe,newAvgWd)
 
-library(lattice)
 par(mfrow=c(2,1))
-plot(oldAvg,type="l",main="Average Daily Activity",ylab="Steps before")
-lines(mean(oldAvg))
-plot(newAvg,type="l",xlab="5-minute interval",ylab="Steps after")
+plot(newAvgWe,type="l",main="Average Daily Activity",ylab="Weekend Steps")
+plot(newAvgWd,type="l",xlab="5-minute interval",ylab="Weekday Steps")
 ```
