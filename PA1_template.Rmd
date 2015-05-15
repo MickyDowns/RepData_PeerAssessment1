@@ -1,11 +1,12 @@
-Reproducible Research - Peer Assessment 1
+Tracking / Reporting Daily Activity Data
 ========================================================
+### Reproducible Research, Peer Assessment 1, Micky Downs
 
-### Loading and preprocessing the data
+## Loading and preprocessing the data
 
-Read activity data from file. [Zip file](https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip) was downloaded from course repository on 18 Jul 2014.
+Read activity data from file. [Zip file](https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip) was downloaded from course repository on 14 May 2015.
 
-```{r}
+```{r eval=TRUE,cache=TRUE,echo=TRUE,warning=FALSE,fig.show='asis',fig.height=4,fig.width=7}
 path<-"/Users/mdowns/RepData_PeerAssessment1"
 setwd(path)
 url<-"https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
@@ -19,34 +20,33 @@ old<-read.csv("activity.csv",header=T)
 
 Transform date fields for analysis. 
 
-```{r}
+```{r eval=TRUE,cache=TRUE,echo=TRUE,warning=FALSE,fig.show='asis',fig.height=4,fig.width=7}
 old$interval<-sprintf("%04d",old$interval)
 old$dttm<-strptime(paste(old$date,old$interval),format="%Y-%m-%d %H%M")
 ```
 
 
-### What is mean total number of steps taken per day?
+## What is mean total number of steps taken per day?
 
 Make a histogram of the total number of steps taken each day.
-
-```{r fig.width=7, fig.height=6}
+```{r eval=TRUE,cache=TRUE,echo=TRUE,warning=FALSE,fig.show='asis',fig.height=4,fig.width=7}
 oldSteps<-tapply(old$steps,old$date,sum)
 hist(oldSteps,main="Total Steps Per Day",
-     ylab="Number of Days",xlab="Total Steps",ylim=c(0,30))
+     ylab="Number of Days",xlab="Total Steps",ylim=c(0,30),col="red")
 ```
 
 Calculate the mean and median total number of steps taken per day.
-```{r}
+```{r eval=TRUE,cache=TRUE,echo=TRUE,warning=FALSE,fig.show='asis',fig.height=4,fig.width=7}
 oldMean<-mean(oldSteps,na.rm=TRUE);oldMean
 oldMedian<-median(oldSteps,na.rm=TRUE);oldMedian
 ```
 
 
-### What is the average daily activity pattern?
+## What is the average daily activity pattern?
 
 Make time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis).
 
-```{r fig.width=7, fig.height=6}
+```{r eval=TRUE,cache=TRUE,echo=TRUE,warning=FALSE,fig.show='asis',fig.height=4,fig.width=7}
 oldAvg<-tapply(old$steps,old$interval,mean,na.rm=T)
 plot(oldAvg,type="l",main="Average Daily Activity",
      xlab="5-minute interval",ylab="Average steps across all days")
@@ -54,7 +54,7 @@ plot(oldAvg,type="l",main="Average Daily Activity",
 
 Find 5-minute interval, on average across all the days, that contains the maximum number of steps.
 
-```{r}
+```{r eval=TRUE,cache=TRUE,echo=TRUE,warning=FALSE,fig.show='asis',fig.height=4,fig.width=7}
 oldAvg<-as.matrix(cbind(old$interval[1:288],oldAvg),stringsAsFactors=FALSE)
 max<-max(as.numeric(oldAvg[,2]))
 peak<-oldAvg[oldAvg[,2]==max,1]
@@ -62,22 +62,22 @@ t<-strptime(peak,"%H%M")
 format(t,"%H:%M")
 ```
 
-
-### Imputing missing values
+## Imputing missing values
 
 Calculate the total number of rows with NAs.
 
-```{r}
+```{r eval=TRUE,cache=TRUE,echo=TRUE,warning=FALSE,fig.show='asis',fig.height=4,fig.width=7}
 comp<-complete.cases(old[,1:3])
 nrow(old)-sum(comp)
 ```
 
 Devise a strategy for filling in all of the missing values in the dataset: 
-*When NAs occur, I retrieve the rounded (via as.integer) average number of steps for the corresponding time interval across all days in the training data set*
+
+$\emph{When NAs occur, I substitute the rounded (via as.integer) average number of steps for the corresponding time interval across all days in the training data set}
 
 Create a new dataset equal to the original dataset but with the NAs filled in.
 
-```{r}
+```{r eval=TRUE,cache=TRUE,echo=TRUE,warning=FALSE,fig.show='asis',fig.height=4,fig.width=7}
 new<-old
 for(i in 1:dim(old)[1]){
      if(is.na(old$steps[i])){
@@ -89,31 +89,31 @@ for(i in 1:dim(old)[1]){
 
 Make a histogram of the total number of steps taken each day.  Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps?
 
-```{r fig.width=7, fig.height=6}
+```{r eval=TRUE,cache=TRUE,echo=TRUE,warning=FALSE,fig.show='asis',fig.height=4,fig.width=7}
 newSteps<-tapply(new$steps,new$date,sum)
 hist(newSteps,main="Total Steps Per Day",ylab="Number of Days",
-     xlab="Total Steps",ylim=c(0,35))
+     xlab="Total Steps",ylim=c(0,35),col="red")
 ```
 
 Calculate the mean and median total number of steps taken per day.
 
-```{r}
+```{r eval=TRUE,cache=TRUE,echo=TRUE,warning=FALSE,fig.show='asis',fig.height=4,fig.width=7}
 newMean<-mean(newSteps,na.rm=T);newMean
 newMedian<-median(newSteps,na.rm=T);newMedian
 ```
 
 Do these values differ from the estimates from the first part of the assignment? What is the impact of imputing missing data on the estimates of the total daily number of steps? 
 
-```{r}
+```{r eval=TRUE,cache=TRUE,echo=TRUE,warning=FALSE,fig.show='asis',fig.height=4,fig.width=7}
 newMean-oldMean
 newMedian-oldMedian
 ```
 
 
-### Are there differences in activity patterns between weekdays and weekends?
+## Are there differences in activity patterns between weekdays and weekends?
 
 Create a new factor variable in the dataset with two levels -- "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
-```{r}
+```{r eval=TRUE,cache=TRUE,echo=TRUE,warning=FALSE,fig.show='asis',fig.height=4,fig.width=7}
 new$day<-weekdays(new$dttm)
 new$end.fl[new$day=="Saturday" | new$day=="Sunday"]<-1
 new$end.fl[new$day=="Monday" | new$day=="Tuesday" | new$day=="Wednesday" | new$day=="Thursday" | new$day=="Friday"]<-0
@@ -121,7 +121,7 @@ new$end.fl[new$day=="Monday" | new$day=="Tuesday" | new$day=="Wednesday" | new$d
 
 Make a panel plot containing a time series plot (i.e. type = "l") of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all weekday days or weekend days (y-axis). The plot should look something like the following, which was creating using simulated data:
 
-```{r fig.width=7, fig.height=6}
+```{r eval=TRUE,cache=TRUE,echo=TRUE,warning=FALSE,fig.show='asis',fig.height=4,fig.width=7}
 weekend<-with(subset(new,end.fl==1),tapply(steps,interval,mean,na.rm=T))
 weekday<-with(subset(new,end.fl==0),tapply(steps,interval,mean,na.rm=T))
 
