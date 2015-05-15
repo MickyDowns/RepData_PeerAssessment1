@@ -3,7 +3,6 @@ Tracking / Reporting Daily Activity Data
 ### Reproducible Research, Peer Assessment 1, Micky Downs
 
 ## Loading and preprocessing the data
-
 Read activity data from file. [Zip file](https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip) was downloaded from course repository on 14 May 2015.
 
 
@@ -27,10 +26,9 @@ old$interval<-sprintf("%04d",old$interval)
 old$dttm<-strptime(paste(old$date,old$interval),format="%Y-%m-%d %H%M")
 ```
 
-
 ## What is mean total number of steps taken per day?
-
 Make a histogram of the total number of steps taken each day.
+
 
 ```r
 oldSteps<-tapply(old$steps,old$date,sum)
@@ -58,9 +56,7 @@ oldMedian<-median(oldSteps,na.rm=TRUE);oldMedian
 ## [1] 10765
 ```
 
-
 ## What is the average daily activity pattern?
-
 Make time series plot of the 5-minute interval (x-axis) and the average number of steps taken, averaged across all days (y-axis).
 
 
@@ -88,7 +84,6 @@ format(t,"%H:%M")
 ```
 
 ## Imputing missing values
-
 Calculate the total number of rows with NAs.
 
 
@@ -169,7 +164,6 @@ newMedian-oldMedian
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
-
 Create a new factor variable in the dataset with two levels -- "weekday" and "weekend" indicating whether a given date is a weekday or weekend day.
 
 ```r
